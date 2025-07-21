@@ -23,3 +23,14 @@ class Player:
 
     def draw(self):
         drawCircle(self.x, self.y, 20, fill='orange')
+    
+    def collidesWith(self, rect):
+        cx, cy, r = self.x, self.y, 20
+        rx, ry, rw, rh = rect.x, rect.y, rect.width, rect.height
+
+        closestX = max(rx, min(cx, rx + rw))
+        closestY = max(ry, min(cy, ry + rh))
+
+        dx = cx - closestX
+        dy = cy - closestY
+        return dx**2 + dy**2 <= r**2
