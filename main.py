@@ -1,7 +1,7 @@
 from cmu_graphics import *
 from player import Player
 from obstacle import Obstacle
-from coin import Coin
+from coin import CoinManager
 import random
 
 def onAppStart(app):
@@ -9,10 +9,17 @@ def onAppStart(app):
     app.height = 500
     app.player = Player(100, 200)
     app.obstacles = []
-    app.coins = []
+    app.coins = CoinManager()
     app.score = 0
     app.spawnTimer = 0
     app.gameOver = False
+
+def isOverlapping(x, y, radius, obstacles):
+    for obs in obstacles:
+        if (x + radius > obs.x and x - radius < obs.x + obs.width and
+            y + radius > obs.y and y - radius < obs.y + obs.height):
+            return True
+    return False
 
 
 # goal of onstep: move player, spawn obstacles and coins
@@ -20,22 +27,12 @@ def onStep(app):
     if app.gameOver:
         return
 
+    app.spawnTimer+=1
+
     # update player position
     app.player.update()
-
-    # update coin if offscreen or collected
-    for coin in app.coins:
-        coin.update()
-        if not coin.collected and coin.collect(app.player):
-            coin.collected = True
-            app.score+=1
-
-    # spawn coins
-    app.coins = [c for c in app.coins if c.x + c.radius >0]
-    if len(app.coins)<5:
-        x = max(c.x for c in app.coins) + 150 if app.coins else app.width
-        y = random.randint(100, 400)
-        app.coins.append(Coin(x, y))
+    app.coins.update()
+    collectCoins(app)
 
     # move obstacles, detect collision
     for obs in app.obstacles:
@@ -47,13 +44,40 @@ def onStep(app):
     app.obstacles = [obs for obs in app.obstacles if not obs.isOffScreen()]
 
     # spawn obstacles
-    app.spawnTimer += 1
     if app.spawnTimer >= 30:
         y = random.randint(100, 400)
-        app.obstacles.append(Obstacle(app.width, y))
+        obstacle = Obstacle(app.width, y)
+
+        # Check if it overlaps any coin
+        overlaps = False
+        for coin in app.coins.coins:
+            if (obstacle.x < coin.x + coin.radius and obstacle.x + obstacle.width > coin.x - coin.radius and
+                obstacle.y < coin.y + coin.radius and obstacle.y + obstacle.height > coin.y - coin.radius):
+                overlaps = True
+                break
+
+        if not overlaps:
+            app.obstacles.append(obstacle)
+
         app.spawnTimer = 0
 
 
+
+def collectCoins(app):
+    collected = []
+    for coin in app.coins.coins:
+        if isCoinCollected(app.player, coin):
+            collected.append(coin)
+            app.score += 1
+
+    for coin in collected:
+        app.coins.coins.remove(coin)
+
+def isCoinCollected(player, coin):
+    dx = player.x - coin.x
+    dy = player.y - coin.y
+    distance = (dx**2 + dy**2)**0.5
+    return distance < coin.radius + 20
 
 def onKeyHold(app, keys):
     if 'space' in keys:
@@ -76,9 +100,8 @@ def redrawAll(app):
     for obs in app.obstacles:
         obs.draw()
 
-    for coin in app.coins:
-        coin.draw()
-    drawLabel(f'Score: {app.score}', 50, 20, size=16, bold=True)
+    app.coins.draw()
+    drawLabel(f"Score: {app.score}", 60, 30, size=20, bold=True)
 
     # game over message
     if app.gameOver:
