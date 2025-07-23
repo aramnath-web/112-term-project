@@ -16,7 +16,7 @@ class Player:
             self.dy += self.gravity
         self.dy = max(-8, min(8, self.dy))
         self.y += self.dy
-        self.y = max(20, min(380, self.y))
+        self.y = max(20, min(app.height-20, self.y))
 
     def setJetpack(self, state):
         self.isJetpacking = state

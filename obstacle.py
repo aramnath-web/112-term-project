@@ -8,7 +8,7 @@ class Obstacle:
         self.height = height
 
     def update(self):
-        self.x -= 3
+        self.x -= 6
 
     def draw(self):
         drawRect(self.x, self.y, self.width, self.height, fill='red')
