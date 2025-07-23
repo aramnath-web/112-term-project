@@ -1,5 +1,4 @@
 from cmu_graphics import *
-<<<<<<< HEAD
 from player import Player
 from obstacle import Obstacle
 from coin import Coin
@@ -112,4 +111,3 @@ def redrawAll(app):
     drawLabel("Jetpack Joyride", app.width//2, 20, size=20, bold=True)
 
 runApp()
->>>>>>> 3e66c79 (tweak jump control)
