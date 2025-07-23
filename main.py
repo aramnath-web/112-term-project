@@ -11,9 +11,11 @@ def onAppStart(app):
     app.obstacles = []
     app.coins = []
     app.score = 0
-    app.spawnTimer = 0 #spawns 1 obstacle and coin per second
+    app.spawnTimer = 0
     app.gameOver = False
 
+
+#goal of onstep: move player, spawn obstacles and coins
 def onStep(app):
     if app.gameOver:
         return
@@ -31,23 +33,21 @@ def onStep(app):
     # spawn coins
     app.coins = [c for c in app.coins if c.x + c.radius >0]
     if len(app.coins)<5:
-        x = max(c.x for c in app.coins) + 150 if app.coins else 400
+        x = max(c.x for c in app.coins) + 150 if app.coins else app.width
         y = random.randint(100, 400)
         app.coins.append(Coin(x, y))
 
-    # spawn obstacles
-    app.spawnTimer += 1
-    if app.spawnTimer >= 30:
-        y = random.randint(100, 400)
-        app.obstacles.append(Obstacle(app.width, y))
-        app.spawnTimer = 0
-
-    # make sure they are not off screen
+    # move obstacles, detect collision
     for obs in app.obstacles:
         obs.update()
+        if app.player.collidesWith(obs):
+            app.gameOver = True
+
+    # remove off-screen obstacles
     app.obstacles = [obs for obs in app.obstacles if not obs.isOffScreen()]
 
-    # spawn lasers
+    # spawn obstacles
+    app.spawnTimer += 1
     if app.spawnTimer >= 30:
         y = random.randint(100, 400)
         app.obstacles.append(Obstacle(app.width, y))
@@ -70,9 +70,10 @@ def onKeyPress(app, key):
 def redrawAll(app):
     drawRect(0, 0, app.width, app.height, fill='skyBlue')
 
+    app.player.draw()
+    
     for obs in app.obstacles:
         obs.draw()
-    app.player.draw()
 
     for coin in app.coins:
         coin.draw()
