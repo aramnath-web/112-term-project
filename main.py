@@ -11,13 +11,14 @@ def onAppStart(app):
     app.obstacles = []
     app.coins = []
     app.score = 0
-    app.spawnTimer = 0
+    app.spawnTimer = 0 #spawns 1 obstacle and coin per second
     app.gameOver = False
 
 def onStep(app):
     if app.gameOver:
         return
 
+    #update player position
     app.player.update()
 
     # update coin if offscreen or collected
@@ -27,16 +28,16 @@ def onStep(app):
             coin.collected = True
             app.score+=1
 
-
+    # spawn coins
     app.coins = [c for c in app.coins if c.x + c.radius >0]
     if len(app.coins)<5:
         x = max(c.x for c in app.coins) + 150 if app.coins else 400
         y = random.randint(100, 400)
         app.coins.append(Coin(x, y))
 
-
+    # spawn obstacles
     app.spawnTimer += 1
-    if app.spawnTimer >= 60:
+    if app.spawnTimer >= 30:
         y = random.randint(100, 400)
         app.obstacles.append(Obstacle(app.width, y))
         app.spawnTimer = 0
@@ -47,8 +48,7 @@ def onStep(app):
     app.obstacles = [obs for obs in app.obstacles if not obs.isOffScreen()]
 
     # spawn lasers
-    app.spawnTimer += 1
-    if app.spawnTimer >= 60:
+    if app.spawnTimer >= 30:
         y = random.randint(100, 400)
         app.obstacles.append(Obstacle(app.width, y))
         app.spawnTimer = 0
