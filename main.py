@@ -15,12 +15,12 @@ def onAppStart(app):
     app.gameOver = False
 
 
-#goal of onstep: move player, spawn obstacles and coins
+# goal of onstep: move player, spawn obstacles and coins
 def onStep(app):
     if app.gameOver:
         return
 
-    #update player position
+    # update player position
     app.player.update()
 
     # update coin if offscreen or collected
@@ -70,14 +70,17 @@ def onKeyPress(app, key):
 def redrawAll(app):
     drawRect(0, 0, app.width, app.height, fill='skyBlue')
 
+    # draw player, lasers, coins
     app.player.draw()
-    
+
     for obs in app.obstacles:
         obs.draw()
 
     for coin in app.coins:
         coin.draw()
     drawLabel(f'Score: {app.score}', 50, 20, size=16, bold=True)
+
+    # game over message
     if app.gameOver:
         drawLabel("Game Over!", app.width//2, app.height//2, size=32, bold=True, fill='red')
         drawLabel("Press R to restart", app.width//2, app.height//2 + 40, size=16)
