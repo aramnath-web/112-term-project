@@ -4,6 +4,7 @@ from obstacle import Obstacle
 from coin import CoinManager
 import random
 
+#make sure to move obstacle spawning to the obstacle.py file
 def onAppStart(app):
     app.width = 800
     app.height = 500
@@ -45,7 +46,7 @@ def onStep(app):
 
     # spawn obstacles
     if app.spawnTimer >= 30:
-        y = random.randint(100, 400)
+        y = random.randint(100, 450)
         obstacle = Obstacle(app.width, y)
 
         # Check if it overlaps any coin

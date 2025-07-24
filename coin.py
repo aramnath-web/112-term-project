@@ -24,14 +24,14 @@ class CoinManager:
     def update(self):
         self.stepCount += 1
 
-        # Update coin positions
+        # move coin
         for coin in self.coins:
             coin.update()
 
-        # Remove offscreen coins
+        # remove old coins
         self.coins = [coin for coin in self.coins if not coin.isOffScreen()]
 
-        # Spawn new formations every 30 frames
+        # spawn coins
         if self.stepCount % 30 == 0:
             self.spawnFormation()
 
@@ -42,11 +42,10 @@ class CoinManager:
     def spawnFormation(self):
         formationType = random.choice(['line', 'arc', 'column'])
 
-        # Get x-position based on last coin (or default)
+        # get pos for coin
         x = max((coin.x for coin in self.coins), default=app.width) + 200
         y = random.randint(100, app.height - 100)
 
-        # Choose the formation and create coins
         if formationType == 'line':
             newCoins = self.spawnLine(x, y, count=5, spacing=30)
         elif formationType == 'arc':
@@ -54,9 +53,9 @@ class CoinManager:
         elif formationType == 'column':
             newCoins = self.spawnColumn(x, y, count=6, spacing=25)
 
-        # Only keep coins that don't overlap obstacles
+        # keep coins that dont overlap
         filteredCoins = []
-        for coin in newCoins:
+        for coin in newCoins: # type: ignore (it had a red line and was bothering me yet nothing was wrong)
             if not isOverlapping(coin.x, coin.y, coin.radius, app.obstacles):
                 filteredCoins.append(coin)
 
