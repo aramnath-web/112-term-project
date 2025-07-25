@@ -1,6 +1,6 @@
 from cmu_graphics import *
 from player import Player
-from obstacle import Obstacle
+from obstacle import Obstacle, ObstacleManager
 from coin import CoinManager
 import random
 
@@ -9,10 +9,9 @@ def onAppStart(app):
     app.width = 800
     app.height = 500
     app.player = Player(100, 200)
-    app.obstacles = []
+    app.obstacles = ObstacleManager()
     app.coins = CoinManager()
     app.score = 0
-    app.spawnTimer = 0
     app.gameOver = False
 
 def isOverlapping(x, y, radius, obstacles):
@@ -28,39 +27,14 @@ def onStep(app):
     if app.gameOver:
         return
 
-    app.spawnTimer+=1
-
     # update player position
     app.player.update()
     app.coins.update()
+    app.obstacles.update()
     collectCoins(app)
 
     # move obstacles, detect collision
-    for obs in app.obstacles:
-        obs.update()
-        if app.player.collidesWith(obs):
-            app.gameOver = True
-
-    # remove off-screen obstacles
-    app.obstacles = [obs for obs in app.obstacles if not obs.isOffScreen()]
-
-    # spawn obstacles
-    if app.spawnTimer >= 30:
-        y = random.randint(100, 450)
-        obstacle = Obstacle(app.width, y)
-
-        # Check if it overlaps any coin
-        overlaps = False
-        for coin in app.coins.coins:
-            if (obstacle.x < coin.x + coin.radius and obstacle.x + obstacle.width > coin.x - coin.radius and
-                obstacle.y < coin.y + coin.radius and obstacle.y + obstacle.height > coin.y - coin.radius):
-                overlaps = True
-                break
-
-        if not overlaps:
-            app.obstacles.append(obstacle)
-
-        app.spawnTimer = 0
+    
 
 
 
@@ -98,8 +72,7 @@ def redrawAll(app):
     # draw player, lasers, coins
     app.player.draw()
 
-    for obs in app.obstacles:
-        obs.draw()
+    app.obstacles.draw()
 
     app.coins.draw()
     drawLabel(f"Score: {app.score}", 60, 30, size=20, bold=True)

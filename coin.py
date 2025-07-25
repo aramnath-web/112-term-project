@@ -56,7 +56,7 @@ class CoinManager:
         # keep coins that dont overlap
         filteredCoins = []
         for coin in newCoins: # type: ignore (it had a red line and was bothering me yet nothing was wrong)
-            if not isOverlapping(coin.x, coin.y, coin.radius, app.obstacles):
+            if not isOverlapping(coin.x, coin.y, coin.radius, app.obstacles.obstacles):
                 filteredCoins.append(coin)
 
         self.coins += filteredCoins
