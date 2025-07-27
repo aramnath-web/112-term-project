@@ -20,11 +20,11 @@ class Obstacle:
 class ObstacleManager:
     def __init__(self, ):
         self.obstacles = []
-        self.spawnTimer = 0
+        self.stepCount = 0
 
     def update(self):
 
-        self.spawnTimer+=1
+        self.stepCount+=1
 
         for obs in self.obstacles:
             obs.update()
@@ -35,7 +35,7 @@ class ObstacleManager:
         self.obstacles = [obs for obs in self.obstacles if not obs.isOffScreen()]
 
     # spawn obstacles
-        if self.spawnTimer >= 30:
+        if self.stepCount >= 30:
             y = random.randint(100, 450)
             obstacle = Obstacle(app.width, y)
 
@@ -50,7 +50,7 @@ class ObstacleManager:
             if not overlaps:
                 self.obstacles.append(obstacle)
 
-            self.spawnTimer = 0
+            self.stepCount = 0
     
     def draw(self):
         for obs in self.obstacles:
