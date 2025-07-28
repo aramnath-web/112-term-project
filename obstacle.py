@@ -1,3 +1,5 @@
+#handle obstacle spawning
+
 from cmu_graphics import *
 import random
 

@@ -1,3 +1,5 @@
+#handle player movement
+
 from cmu_graphics import *
 
 class Player:

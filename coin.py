@@ -1,3 +1,5 @@
+#handle coin spawning
+
 from cmu_graphics import *
 import random, math
 

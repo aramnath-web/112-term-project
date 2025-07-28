@@ -1,3 +1,5 @@
+#draw all entities
+
 from cmu_graphics import *
 from player import Player
 from obstacle import Obstacle, ObstacleManager
