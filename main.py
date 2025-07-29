@@ -25,6 +25,8 @@ def onAppStart(app):
     app.score = 0
     app.gameOver = False
     app.steps = 0
+    app.mainMenuMusic = Sound('assets/Jetpack Joyride OST  - Main Theme.mp3')
+    app.mainMenuMusic.play(restart=True, loop=True)
 
 def isOverlapping(x, y, radius, obstacles):
     for obs in obstacles:
@@ -80,7 +82,15 @@ def onKeyRelease(app, key):
         app.player.setJetpack(False)
 def onKeyPress(app, key):
     if key == 'r' and app.gameOver:
-        onAppStart(app)
+        app.mainMenuMusic.play(restart=True, loop=True)
+        app.width = 800
+        app.height = 500
+        app.player = Player(100, 200)
+        app.obstacles = ObstacleManager()
+        app.coins = CoinManager()
+        app.score = 0
+        app.gameOver = False
+        app.steps = 0
 
 
 def redrawAll(app):
@@ -98,5 +108,6 @@ def redrawAll(app):
     if app.gameOver:
         drawLabel("Game Over!", app.width//2, app.height//2, size=32, bold=True, fill='red')
         drawLabel("Press R to restart", app.width//2, app.height//2 + 40, size=16)
+        app.mainMenuMusic.pause()
 
 runApp()
