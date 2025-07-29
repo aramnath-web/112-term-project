@@ -1,3 +1,12 @@
+'''
+Name: Aarav Ramnath
+
+15-112 Term Project: Fly-112 (Jetpack Joyride)
+
+All sprites were obtained from Youtuber McGuy's graphics drive (link: https://drive.google.com/drive/folders/1CVSYtoVMUeBIWUkbAELKBiTWkDCn8BJs)
+'''
+
+
 #draw all entities
 
 from cmu_graphics import *
