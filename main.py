@@ -38,15 +38,11 @@ def onStep(app):
     if app.gameOver:
         return
 
-    # update player position
+    # update positions for each entity
     app.player.update()
     app.coins.update()
     app.obstacles.update()
     collectCoins(app)
-
-    # move obstacles, detect collision
-    
-
 
 
 def collectCoins(app):
@@ -60,10 +56,18 @@ def collectCoins(app):
         app.coins.coins.remove(coin)
 
 def isCoinCollected(player, coin):
-    dx = player.x - coin.x
-    dy = player.y - coin.y
-    distance = (dx**2 + dy**2)**0.5
-    return distance < coin.radius + 20
+    playerCenterX, playerCenterY, playerWidth, playerHeight = player.getHitbox()
+
+    # Rectangle-circle collision
+    nearestX = max(playerCenterX - playerWidth/2,
+                   min(coin.x, playerCenterX + playerWidth/2))
+    nearestY = max(playerCenterY - playerHeight/2,
+                   min(coin.y, playerCenterY + playerHeight/2))
+
+    dx = coin.x - nearestX
+    dy = coin.y - nearestY
+
+    return (dx**2 + dy**2) < coin.radius**2
 
 def onKeyHold(app, keys):
     if 'space' in keys:
@@ -78,7 +82,7 @@ def onKeyPress(app, key):
 
 
 def redrawAll(app):
-    drawRect(0, 0, app.width, app.height, fill='skyBlue')
+    drawImage('assets/BackdropMain.svg', app.width/2-4, app.height/2+4, width=app.width+47, height=app.height+21, align='center')
 
     # draw player, lasers, coins
     app.player.draw()
