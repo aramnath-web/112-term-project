@@ -17,6 +17,7 @@ import random
 
 #make sure to move obstacle spawning to the obstacle.py file
 def onAppStart(app):
+    app.stepsPerSecond=60
     app.width = 800
     app.height = 500
     app.player = Player(100, 200)
@@ -27,6 +28,7 @@ def onAppStart(app):
     app.steps = 0
     app.mainMenuMusic = Sound('assets/Jetpack Joyride OST  - Main Theme.mp3')
     app.mainMenuMusic.play(restart=True, loop=True)
+    app.speed = 2.5
 
 def isOverlapping(x, y, radius, obstacles):
     for obs in obstacles:
@@ -48,6 +50,9 @@ def onStep(app):
     collectCoins(app)
 
     app.steps+=1
+
+    if not app.gameOver:
+        app.speed+=.0025
 
 def collectCoins(app):
     collected = []
@@ -91,10 +96,11 @@ def onKeyPress(app, key):
         app.score = 0
         app.gameOver = False
         app.steps = 0
+        app.speed=2.5
 
 
 def redrawAll(app):
-    drawImage('assets/BackdropMain.svg', app.width/2-4, app.height/2+4, width=app.width+47, height=app.height+21, align='center')
+    drawImage('assets/BackdropMain.svg', app.width/2-4, app.height/2+4, width=app.width+47, height=app.height+21, align='center') # weird numbers but necessary in order to perfectly align the background
 
     # draw player, lasers, coins
     app.player.draw()

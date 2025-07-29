@@ -7,8 +7,8 @@ class Player:
         self.x = x
         self.y = y
         self.dy = 0
-        self.gravity = 0.5
-        self.thrust = -7
+        self.gravity = 0.25
+        self.thrust = -5
         self.isJetpacking = False
         self.runningSprites = ['assets/BarryRun1.svg', 'assets/BarryRun2.svg', 'assets/BarryRun3.svg']
         self.flySprite = 'assets/BarryFly.svg'
@@ -24,7 +24,7 @@ class Player:
 
         if dead:
             self.state = self.deadSprite
-            self.y += 5
+            self.y += 2.5
             if self.y>380:
                 self.y = 380
         else:
@@ -35,7 +35,7 @@ class Player:
             
             if self.y==380:
                 self.state = self.runningSprites[self.count%2]
-                self.count+=1 if stepCount%3==0 else 0
+                self.count+=1 if stepCount%6==0 else 0
             else:
                 self.state = self.flySprite
                 self.count=0

@@ -12,8 +12,8 @@ class Coin:
     def draw(self):
         drawCircle(self.x, self.y, self.radius, fill='gold', border='orange', borderWidth=2)
 
-    def update(self, speed=6):
-        self.x -= speed
+    def update(self):
+        self.x -= app.speed
 
     def isOffScreen(self):
         return self.x < -self.radius
@@ -34,7 +34,7 @@ class CoinManager:
         self.coins = [coin for coin in self.coins if not coin.isOffScreen()]
 
         # spawn coins
-        if self.stepCount % 30 == 0:
+        if self.stepCount % 60 == 0:
             self.spawnFormation()
 
     def draw(self):
@@ -45,7 +45,7 @@ class CoinManager:
         formationType = random.choice(['line', 'arc', 'column'])
 
         # get pos for coin
-        x = max((coin.x for coin in self.coins), default=app.width) + 200
+        x = max((coin.x for coin in self.coins), default=app.width) + 60 * app.speed
         y = random.randint(100, app.height - 100)
 
         if formationType == 'line':

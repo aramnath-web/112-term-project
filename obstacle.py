@@ -11,7 +11,7 @@ class Obstacle:
         self.height = height
 
     def update(self):
-        self.x -= 6
+        self.x -= app.speed
 
     def draw(self):
         drawRect(self.x, self.y, self.width, self.height, fill='red')
@@ -20,7 +20,7 @@ class Obstacle:
         return self.x + self.width < 0
     
 class ObstacleManager:
-    def __init__(self, ):
+    def __init__(self):
         self.obstacles = []
         self.stepCount = 0
 
@@ -37,7 +37,7 @@ class ObstacleManager:
         self.obstacles = [obs for obs in self.obstacles if not obs.isOffScreen()]
 
     # spawn obstacles
-        if self.stepCount >= 30:
+        if self.stepCount >= 60:
             y = random.randint(100, 450)
             obstacle = Obstacle(app.width, y)
 
