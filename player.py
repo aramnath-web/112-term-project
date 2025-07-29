@@ -36,6 +36,7 @@ class Player:
         drawImage(self.state, self.x, self.y)
         drawRect(self.x+30, self.y+30, 50, 50, align='center', fill=None, border='red')
     
+    # rectangle and obstacle collision
     def collidesWith(self, rect):
         cx, cy, w, h = self.x + 30, self.y + 30, 50, 50
         rx, ry, rw, rh = rect.x, rect.y, rect.width, rect.height

@@ -55,10 +55,10 @@ def collectCoins(app):
     for coin in collected:
         app.coins.coins.remove(coin)
 
+# new collision between hitbox and coin
 def isCoinCollected(player, coin):
     playerCenterX, playerCenterY, playerWidth, playerHeight = player.getHitbox()
 
-    # Rectangle-circle collision
     nearestX = max(playerCenterX - playerWidth/2,
                    min(coin.x, playerCenterX + playerWidth/2))
     nearestY = max(playerCenterY - playerHeight/2,

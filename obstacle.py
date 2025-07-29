@@ -41,7 +41,7 @@ class ObstacleManager:
             y = random.randint(100, 450)
             obstacle = Obstacle(app.width, y)
 
-            # Check if it overlaps any coin
+            # check coin overlap
             overlaps = False
             for coin in app.coins.coins:
                 if (obstacle.x < coin.x + coin.radius and obstacle.x + obstacle.width > coin.x - coin.radius and
