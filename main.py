@@ -36,11 +36,11 @@ def isOverlapping(x, y, radius, obstacles):
 
 # goal of onstep: move player, spawn obstacles and coins
 def onStep(app):
-    if app.gameOver:
-        return
 
     # update positions for each entity
-    app.player.update(app.steps)
+    app.player.update(app.steps, app.gameOver)
+    if app.gameOver:
+        return
     app.coins.update()
     app.obstacles.update()
     collectCoins(app)
