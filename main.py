@@ -24,6 +24,7 @@ def onAppStart(app):
     app.coins = CoinManager()
     app.score = 0
     app.gameOver = False
+    app.steps = 0
 
 def isOverlapping(x, y, radius, obstacles):
     for obs in obstacles:
@@ -39,11 +40,12 @@ def onStep(app):
         return
 
     # update positions for each entity
-    app.player.update()
+    app.player.update(app.steps)
     app.coins.update()
     app.obstacles.update()
     collectCoins(app)
 
+    app.steps+=1
 
 def collectCoins(app):
     collected = []

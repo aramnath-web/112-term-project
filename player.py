@@ -10,19 +10,27 @@ class Player:
         self.gravity = 0.5
         self.thrust = -7
         self.isJetpacking = False
-        self.runningSprites = ['cmu://1055491/39834473/BarryRun1.svg', 'cmu://1055491/39834474/BarryRun2.svg', 'cmu://1055491/39834425/BarryRun3.svg']
+        self.runningSprites = ['assets/BarryRun1.svg', 'assets/BarryRun2.svg', 'assets/BarryRun3.svg']
         self.flySprite = 'assets/BarryFly.svg'
         self.state = self.flySprite
+        self.count = 0
 
     def getHitbox(self):
             # This matches the red rectangle you're currently drawing
             return (self.x + 30, self.y + 30, 50, 50)
 
-    def update(self):
+    def update(self, stepCount):
         if self.isJetpacking:
             self.dy = self.thrust
         else:
             self.dy += self.gravity
+        
+        if self.y==380:
+            self.state = self.runningSprites[self.count%2]
+            self.count+=1 if stepCount%3==0 else 0
+        else:
+            self.state = self.flySprite
+            self.count=0
         self.dy = max(-8, min(8, self.dy))
         self.y += self.dy
         self.y = max(20, min(app.height-20, self.y))
