@@ -46,7 +46,7 @@ class CoinManager:
 
         # get pos for coin
         x = max((coin.x for coin in self.coins), default=app.width) + 60 * app.speed
-        y = random.randint(100, app.height - 100)
+        y = random.randint(100, app.height - 150)
 
         if formationType == 'line':
             newCoins = self.spawnLine(x, y, count=5, spacing=30)

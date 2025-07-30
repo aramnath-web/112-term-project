@@ -13,6 +13,7 @@ from cmu_graphics import *
 from player import Player
 from obstacle import Obstacle, ObstacleManager
 from coin import CoinManager
+from leaderboard import * 
 import random
 
 def onAppStart(app):
@@ -33,6 +34,8 @@ def onAppStart(app):
     app.gameOver = None
     app.steps = None
     app.speed=None
+    app.leaderboardData = loadLeaderboard()
+    app.ran = False
 
 
 #######################################
@@ -70,8 +73,7 @@ def menu_onMousePress(app, mouseX, mouseY):
     leaderboardX = app.width/2
     if (leaderboardX - bw/2 <= mouseX <= leaderboardX + bw/2 and
         cy - bh/2 <= mouseY <= cy + bh/2):
-        print('placeholder')
-        return
+        setActiveScreen('leaderboard')
 
     # settings button code
     settingsX = app.width/2 + 200
@@ -80,12 +82,45 @@ def menu_onMousePress(app, mouseX, mouseY):
         print('placeholder')
         return
 
+######################################
+# Leaderboard
+######################################
+
+
+def leaderboard_onScreenActivate(app):
+    app.leaderboardData = loadLeaderboard()
+
+def leaderboard_redrawAll(app):
+    drawRect(0, 0, app.width, app.height, fill='black')
+
+    drawLabel("Leaderboard", app.width//2, 50, size=40, bold=True, fill='white')
+    
+    if not app.leaderboardData:
+        drawLabel("No scores found", app.width//2, app.height//2, size=20, fill='white')
+    else:
+        # AI recommended I use enumerate to parse list data, but the code was implemented by me
+        for i, entry in enumerate(app.leaderboardData):
+            name, score = entry
+            drawLabel(f"{i+1}. {name} - {score}", app.width//2, 100 + i*30, size=20, fill='white')
+
+    drawRect(app.width//2, app.height - 60, 150, 50, align='center', fill='red')
+    drawLabel("Back", app.width//2, app.height - 60, size=20, fill='white', bold=True)
+
+
+def leaderboard_onMousePress(app, mouseX, mouseY):
+    backX = app.width//2
+    backY = app.height - 60
+    if (backX - 75 <= mouseX <= backX + 75 and
+        backY - 25 <= mouseY <= backY + 25):
+        setActiveScreen('menu')
+
+
 #######################################
 # Game
 #######################################
 
 def game_onScreenActivate(app):
-    app.mainMenuMusic.play(restart=True, loop=True)
+    #app.mainMenuMusic.play(restart=True, loop=True)
     app.player = Player(100, 200)
     app.obstacles = ObstacleManager()
     app.coins = CoinManager()
@@ -93,6 +128,7 @@ def game_onScreenActivate(app):
     app.gameOver = False
     app.steps = 0
     app.speed=2.5
+    app.ran = False
 def isOverlapping(x, y, radius, obstacles):
     for obs in obstacles:
         if (x + radius > obs.x and x - radius < obs.x + obs.width and
@@ -102,12 +138,18 @@ def isOverlapping(x, y, radius, obstacles):
 
 
 # goal of onstep: move player, spawn obstacles and coins
-def game_onStep(app):
 
-    # update positions for each entity
+def game_onStep(app):
     app.player.update(app.steps, app.gameOver)
-    if app.gameOver:
-        return
+    if not app.gameOver:
+        takeStep(app)
+    elif app.gameOver and not app.ran:
+        #app.mainMenuMusic.pause()
+        addScore('Player', app.score)
+        app.ran=True
+
+def takeStep(app):
+    # update positions for each entity    
     app.coins.update()
     app.obstacles.update()
     collectCoins(app)
@@ -119,8 +161,7 @@ def game_onStep(app):
     if app.bgX <= -app.bgWidth / 2:
         app.bgX += app.bgWidth
 
-    if not app.gameOver:
-        app.speed+=.0025
+    app.speed+=.0025
 
 def collectCoins(app):
     collected = []
@@ -156,6 +197,8 @@ def game_onKeyRelease(app, key):
 def game_onKeyPress(app, key):
     if key == 'r' and app.gameOver:
         setActiveScreen('game')
+    elif key =='m' and app.gameOver:
+        setActiveScreen('menu')
 
 
 def game_redrawAll(app):
@@ -174,7 +217,7 @@ def game_redrawAll(app):
     if app.gameOver:
         drawLabel("Game Over!", app.width//2, app.height//2, size=32, bold=True, fill='red')
         drawLabel("Press R to restart", app.width//2, app.height//2 + 40, size=16)
-        app.mainMenuMusic.pause()
+        drawLabel("Press M to return to the menu", app.width//2, app.height//2 + 60, size=16)
 def main():
     runAppWithScreens(initialScreen='menu')
 main()
