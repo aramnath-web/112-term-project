@@ -66,12 +66,14 @@ def menu_onMousePress(app, mouseX, mouseY):
         setActiveScreen('game')
         return
 
+    # leaderboard button code
     leaderboardX = app.width/2
     if (leaderboardX - bw/2 <= mouseX <= leaderboardX + bw/2 and
         cy - bh/2 <= mouseY <= cy + bh/2):
         print('placeholder')
         return
 
+    # settings button code
     settingsX = app.width/2 + 200
     if (settingsX - bw/2 <= mouseX <= settingsX + bw/2 and
         cy - bh/2 <= mouseY <= cy + bh/2):
