@@ -16,8 +16,8 @@ class Player:
         self.state = self.flySprite
         self.count = 0
 
+    # logic for this hitbox was made by AI (i couldn't deal with the offset of the sprite)
     def getHitbox(self):
-            # This matches the red rectangle you're currently drawing
             return (self.x + 30, self.y + 30, 50, 50)
 
     def update(self, stepCount, dead):

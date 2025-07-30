@@ -4,6 +4,8 @@ Name: Aarav Ramnath
 15-112 Term Project: Fly-112 (Jetpack Joyride)
 
 All sprites were obtained from Youtuber McGuy's graphics drive (link: https://drive.google.com/drive/folders/1CVSYtoVMUeBIWUkbAELKBiTWkDCn8BJs)
+
+AI was used in some of the logic and will be cited wherever used in each file
 '''
 
 
@@ -13,7 +15,6 @@ from obstacle import Obstacle, ObstacleManager
 from coin import CoinManager
 import random
 
-#make sure to move obstacle spawning to the obstacle.py file
 def onAppStart(app):
     app.stepsPerSecond=60
     app.width = 800
@@ -52,6 +53,31 @@ def menu_redrawAll(app):
     drawLabel('Leaderboard', app.width/2, app.height/2+100, bold=True, fill='white', size=20)
     drawLabel('Settings', app.width/2+200, app.height/2+100, bold=True, fill='white', size=30)
 
+def menu_onMousePress(app, mouseX, mouseY):
+    # button width, height, and center y
+    bw = 150
+    bh = 75
+    cy = app.height/2 + 100
+
+    # play button code
+    playX = app.width/2 - 200
+    if (playX - bw/2 <= mouseX <= playX + bw/2 and
+        cy - bh/2 <= mouseY <= cy + bh/2):
+        setActiveScreen('game')
+        return
+
+    leaderboardX = app.width/2
+    if (leaderboardX - bw/2 <= mouseX <= leaderboardX + bw/2 and
+        cy - bh/2 <= mouseY <= cy + bh/2):
+        print('placeholder')
+        return
+
+    settingsX = app.width/2 + 200
+    if (settingsX - bw/2 <= mouseX <= settingsX + bw/2 and
+        cy - bh/2 <= mouseY <= cy + bh/2):
+        print('placeholder')
+        return
+
 #######################################
 # Game
 #######################################
@@ -86,6 +112,7 @@ def game_onStep(app):
 
     app.steps+=1
 
+    # background scrolling
     app.bgX -= app.speed
     if app.bgX <= -app.bgWidth / 2:
         app.bgX += app.bgWidth
@@ -105,12 +132,12 @@ def collectCoins(app):
 
 # new collision between hitbox and coin
 def isCoinCollected(player, coin):
-    playerCenterX, playerCenterY, playerWidth, playerHeight = player.getHitbox()
+    playerCenterX, playercy, playerWidth, playerHeight = player.getHitbox()
 
     nearestX = max(playerCenterX - playerWidth/2,
                    min(coin.x, playerCenterX + playerWidth/2))
-    nearestY = max(playerCenterY - playerHeight/2,
-                   min(coin.y, playerCenterY + playerHeight/2))
+    nearestY = max(playercy - playerHeight/2,
+                   min(coin.y, playercy + playerHeight/2))
 
     dx = coin.x - nearestX
     dy = coin.y - nearestY

@@ -37,8 +37,8 @@ class ObstacleManager:
         self.obstacles = [obs for obs in self.obstacles if not obs.isOffScreen()]
 
     # spawn obstacles
-        if self.stepCount >= 60:
-            y = random.randint(100, 450)
+        if self.stepCount >= 40:
+            y = random.randint(30, 400)
             obstacle = Obstacle(app.width, y)
 
             # check coin overlap
