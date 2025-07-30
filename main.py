@@ -7,8 +7,6 @@ All sprites were obtained from Youtuber McGuy's graphics drive (link: https://dr
 '''
 
 
-#draw all entities
-
 from cmu_graphics import *
 from player import Player
 from obstacle import Obstacle, ObstacleManager
@@ -20,16 +18,53 @@ def onAppStart(app):
     app.stepsPerSecond=60
     app.width = 800
     app.height = 500
+    app.mainMenuMusic = Sound('assets/Jetpack Joyride OST  - Main Theme.mp3')
+    app.bgX = app.width/2
+    app.bgSprite = 'assets/BackdropMain.png'
+    app.bgWidth = app.width + 47
+    app.logo = 'assets/JetpackJoyride.png'
+    app.menuBG = 'assets/BackdropEntry.png'
+    app.logoWidth, app.logoHeight = None, None
+    app.player = None
+    app.obstacles = None
+    app.coins = None
+    app.score = None
+    app.gameOver = None
+    app.steps = None
+    app.speed=None
+
+
+#######################################
+# Menu
+#######################################
+
+def menu_onScreenActivate(app):
+    app.logoWidth, app.logoHeight = getImageSize(app.logo)
+
+def menu_redrawAll(app):
+    drawImage(app.menuBG, 0, 0, width = app.width, height = app.height)
+    drawImage(app.logo, app.width/2, app.height/2-100, width = app.logoWidth/2, height = app.logoHeight/2, align='center')
+    drawLabel('An Aarav Ramnath Project', app.width/2, app.height/2+15, fill='white', bold=True, size=20)
+    drawRect(app.width/2, app.height/2+100, 150, 75, align = 'center', fill = 'red', border = 'black', borderWidth=2)
+    drawRect(app.width/2-200, app.height/2+100, 150, 75, align = 'center', fill = 'red', border = 'black', borderWidth=2)
+    drawRect(app.width/2+200, app.height/2+100, 150, 75, align = 'center', fill = 'red', border = 'black', borderWidth=2)
+    drawLabel('Play', app.width/2-200, app.height/2+100, bold=True, fill='white', size=30)
+    drawLabel('Leaderboard', app.width/2, app.height/2+100, bold=True, fill='white', size=20)
+    drawLabel('Settings', app.width/2+200, app.height/2+100, bold=True, fill='white', size=30)
+
+#######################################
+# Game
+#######################################
+
+def game_onScreenActivate(app):
+    app.mainMenuMusic.play(restart=True, loop=True)
     app.player = Player(100, 200)
     app.obstacles = ObstacleManager()
     app.coins = CoinManager()
     app.score = 0
     app.gameOver = False
     app.steps = 0
-    app.mainMenuMusic = Sound('assets/Jetpack Joyride OST  - Main Theme.mp3')
-    app.mainMenuMusic.play(restart=True, loop=True)
-    app.speed = 2.5
-
+    app.speed=2.5
 def isOverlapping(x, y, radius, obstacles):
     for obs in obstacles:
         if (x + radius > obs.x and x - radius < obs.x + obs.width and
@@ -39,7 +74,7 @@ def isOverlapping(x, y, radius, obstacles):
 
 
 # goal of onstep: move player, spawn obstacles and coins
-def onStep(app):
+def game_onStep(app):
 
     # update positions for each entity
     app.player.update(app.steps, app.gameOver)
@@ -50,6 +85,10 @@ def onStep(app):
     collectCoins(app)
 
     app.steps+=1
+
+    app.bgX -= app.speed
+    if app.bgX <= -app.bgWidth / 2:
+        app.bgX += app.bgWidth
 
     if not app.gameOver:
         app.speed+=.0025
@@ -78,29 +117,21 @@ def isCoinCollected(player, coin):
 
     return (dx**2 + dy**2) < coin.radius**2
 
-def onKeyHold(app, keys):
+def game_onKeyHold(app, keys):
     if 'space' in keys:
         app.player.setJetpack(True)
 
-def onKeyRelease(app, key):
+def game_onKeyRelease(app, key):
     if key == 'space':
         app.player.setJetpack(False)
-def onKeyPress(app, key):
+def game_onKeyPress(app, key):
     if key == 'r' and app.gameOver:
-        app.mainMenuMusic.play(restart=True, loop=True)
-        app.width = 800
-        app.height = 500
-        app.player = Player(100, 200)
-        app.obstacles = ObstacleManager()
-        app.coins = CoinManager()
-        app.score = 0
-        app.gameOver = False
-        app.steps = 0
-        app.speed=2.5
+        setActiveScreen('game')
 
 
-def redrawAll(app):
-    drawImage('assets/BackdropMain.svg', app.width/2-4, app.height/2+4, width=app.width+47, height=app.height+21, align='center') # weird numbers but necessary in order to perfectly align the background
+def game_redrawAll(app):
+    drawImage(app.bgSprite, app.bgX, app.height/2+4, width=app.bgWidth, height=app.height+21, align='center')
+    drawImage(app.bgSprite, app.bgX + app.bgWidth, app.height/2+4, width=app.bgWidth, height=app.height+21, align = 'center')
 
     # draw player, lasers, coins
     app.player.draw()
@@ -115,5 +146,6 @@ def redrawAll(app):
         drawLabel("Game Over!", app.width//2, app.height//2, size=32, bold=True, fill='red')
         drawLabel("Press R to restart", app.width//2, app.height//2 + 40, size=16)
         app.mainMenuMusic.pause()
-
-runApp()
+def main():
+    runAppWithScreens(initialScreen='menu')
+main()
