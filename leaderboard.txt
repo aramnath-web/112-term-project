@@ -1,10 +1,10 @@
+aarav,105
+aarav,85
 k,82
 a,75
+aarav,72
 t\,70
 aarav,68
+aarav,66
 a,65
 andrew,62
-t\,46
-a,42
-a,32
-k,32

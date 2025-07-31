@@ -205,6 +205,8 @@ def game_onStep(app):
     app.player.update(app.steps, app.gameOver)
     if not app.gameOver:
         takeStep(app)
+    
+    # only run leaderboard and mute command once
     elif app.gameOver and not app.ran:
         if not app.muted:
             app.mainTheme.pause()

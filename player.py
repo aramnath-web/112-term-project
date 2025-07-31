@@ -48,8 +48,11 @@ class Player:
         self.isJetpacking = state
 
     def draw(self):
-        drawImage(self.state, self.x, self.y)
-        drawRect(self.x+30, self.y+30, 50, 50, align='center', fill=None, border='red')
+        if app.inSAMMode:
+            if app.steps%5==0:
+                drawImage(self.state, self.x, self.y)
+        else:
+            drawImage(self.state, self.x, self.y)
     
     # rectangle and obstacle collision
     def collidesWith(self, rect):

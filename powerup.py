@@ -60,7 +60,7 @@ def collectSAMLetters(app):
             app.samProgress.append(letter.letter)
             if app.samProgress == ['S', 'A', 'M']:
                 app.inSAMMode = True
-                app.samTimer = 20 * app.stepsPerSecond
+                app.samTimer = 15 * app.stepsPerSecond
                 app.samProgress.clear()
     for letter in collected:
         app.samLetters.remove(letter)
