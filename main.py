@@ -7,7 +7,9 @@ Most sprites were obtained from Youtuber McGuy's graphics drive (link: https://d
 
 AI was used in some of the logic and will be cited wherever used in each file
 
-Main logo image was taken from the Jetpack Joyride fandom
+Music was taken from the official jetpack joyride youtube page
+
+Main logo image and zapper sprite were taken from the Jetpack Joyride fandom
 '''
 
 
