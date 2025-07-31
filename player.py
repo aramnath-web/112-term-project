@@ -19,7 +19,6 @@ class Player:
     # logic for this hitbox was made by AI (i couldn't deal with the offset of the sprite)
     def getHitbox(self):
             return (self.x + 30, self.y + 30, 50, 50)
-
     def update(self, stepCount, dead):
 
         if dead:

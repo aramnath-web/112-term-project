@@ -23,8 +23,16 @@ def saveLeaderboard(leaderboard):
 
 def addScore(name, score):
     leaderboard = loadLeaderboard()
+    
+    # first check if the leaderboard has spots available or score is higher than the lowest one on the leaderboard
     if len(leaderboard) < 10 or score > leaderboard[-1][1]:
+        
+        # add the score to the board
         leaderboard.append((name, score))
+
+        # sort it but leave out the bottom one
         leaderboard = sorted(leaderboard, key=lambda x: x[1], reverse=True)[:10]
+
+        #save it
         saveLeaderboard(leaderboard)
     saveLeaderboard(leaderboard)

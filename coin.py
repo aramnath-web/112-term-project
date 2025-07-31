@@ -1,7 +1,8 @@
 #handle coin spawning
 
 from cmu_graphics import *
-import random, math
+import random
+import math
 
 class Coin:
     def __init__(self, x, y):
@@ -10,6 +11,7 @@ class Coin:
         self.radius = 10
 
     def draw(self):
+        # didn't bother to use sprite, just made my own
         drawCircle(self.x, self.y, self.radius, fill='gold', border='orange', borderWidth=2)
 
     def update(self):
@@ -66,9 +68,9 @@ class CoinManager:
     def spawnLine(self, xStart, yStart, count, spacing):
         return [Coin(xStart + i * spacing, yStart) for i in range(count)]
 
+    # this formation was very weird to implement so i asked chatgpt the math behind it
     def spawnArc(self, xStart, yCenter, count, spacing, amplitude):
-        return [Coin(xStart + i * spacing,
-                     yCenter + amplitude * math.sin(i * math.pi / (count - 1)))
+        return [Coin(xStart + i * spacing, yCenter + amplitude * math.sin(i * math.pi / (count - 1)))
                 for i in range(count)]
 
     def spawnColumn(self, xStart, yStart, count, spacing):

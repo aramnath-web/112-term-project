@@ -1,3 +1,10 @@
-Player,6
-Player,0
-Player,0
+k,82
+a,75
+t\,70
+aarav,68
+a,65
+andrew,62
+t\,46
+a,42
+a,32
+k,32

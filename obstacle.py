@@ -5,16 +5,18 @@ import random
 
 class Obstacle:
     def __init__(self, x, y, width=20, height=80):
+
         self.x = x
         self.y = y
         self.width = width
         self.height = height
+        self.image = 'assets/NewZapper.png'
 
     def update(self):
         self.x -= app.speed
 
     def draw(self):
-        drawRect(self.x, self.y, self.width, self.height, fill='red')
+        drawImage(self.image, self.x-5, self.y-5, width = self.width+10, height = self.height+10)
 
     def isOffScreen(self):
         return self.x + self.width < 0
@@ -30,7 +32,7 @@ class ObstacleManager:
 
         for obs in self.obstacles:
             obs.update()
-            if app.player.collidesWith(obs):
+            if app.player.collidesWith(obs) and not app.inSAMMode:
                 app.gameOver = True
 
     # remove off-screen obstacles
